@@ -1,40 +1,93 @@
 body {
-  background: linear-gradient(to bottom right, #ff9ecf, #ffd6eb);
+  margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  text-align: center;
+  background: linear-gradient(135deg, #1e1e2f, #2b2b4a);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-.app {
-  width: 90%;
-  max-width: 420px;
-  margin: auto;
-  margin-top: 40px;
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0px 10px 30px rgba(255, 105, 180, 0.3);
+header {
+  text-align: center;
+  padding: 15px;
+  font-size: 22px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+}
+
+#relationship {
+  font-size: 14px;
+  opacity: 0.8;
 }
 
 #chat {
-  height: 300px;
+  flex: 1;
   overflow-y: auto;
-  border-radius: 12px;
-  padding: 10px;
-  background: #fff5fa;
-  margin-bottom: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-button {
-  padding: 8px 14px;
-  background: hotpink;
-  border: none;
-  color: white;
-  border-radius: 10px;
+.user {
+  align-self: flex-end;
+  background: #4a90e2;
+  padding: 10px 14px;
+  border-radius: 15px 15px 0 15px;
+  max-width: 70%;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.ai {
+  align-self: flex-start;
+  background: #ff6ec7;
+  padding: 10px 14px;
+  border-radius: 15px 15px 15px 0;
+  max-width: 70%;
+  animation: fadeIn 0.3s ease-in;
 }
 
 input {
-  width: 70%;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid pink;
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  margin: 10px;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 20px;
+  background: #ff6ec7;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #ff3fa4;
+  transform: scale(1.05);
+}
+
+footer {
+  display: flex;
+  padding: 10px;
+  background: rgba(255,255,255,0.05);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#chat::-webkit-scrollbar {
+  width: 6px;
+}
+
+#chat::-webkit-scrollbar-thumb {
+  background: #ff6ec7;
+  border-radius: 10px;
 }
