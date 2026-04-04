@@ -1,6 +1,18 @@
-let relationshipLevel = localStorage.getItem("relationship") || 1;
-document.getElementById("relationship").innerText = 
-  "Relationship Level: " + relationshipLevel + " ❤️";
+let affection = localStorage.getItem("affection") || 10;
+let mood = localStorage.getItem("mood") || "shy";
+let userName = localStorage.getItem("userName") || "";
+
+if (!userName) {
+  userName = prompt("What is your name?");
+  localStorage.setItem("userName", userName);
+}
+
+updateStats();
+
+function updateStats() {
+  document.getElementById("relationship").innerText =
+    "Affection: " + affection + " 💖 | Mood: " + mood;
+}
 
 function sendMessage() {
   let input = document.getElementById("userInput");
@@ -10,14 +22,13 @@ function sendMessage() {
   addMessage("You: " + message);
   input.value = "";
 
-  let response = generateResponse(message);
   setTimeout(() => {
+    let response = generateResponse(message);
     addMessage("Sakura: " + response);
-    relationshipLevel++;
-    localStorage.setItem("relationship", relationshipLevel);
-    document.getElementById("relationship").innerText =
-      "Relationship Level: " + relationshipLevel + " ❤️";
-  }, 500);
+    localStorage.setItem("affection", affection);
+    localStorage.setItem("mood", mood);
+    updateStats();
+  }, 800);
 }
 
 function addMessage(text) {
@@ -29,14 +40,50 @@ function addMessage(text) {
 function generateResponse(msg) {
   msg = msg.toLowerCase();
 
-  if (msg.includes("love"))
-    return "Kyaa~ you're making Sakura blush! 🌸";
+  if (msg.includes("love")) {
+    affection += 5;
+    mood = "blushing";
+    return "W-What?! " + userName + " I... I love you too 💕";
+  }
 
-  if (msg.includes("sad"))
-    return "Don't be sad... I'm here for you always 💖";
+  if (msg.includes("another girl")) {
+    affection -= 5;
+    mood = "jealous";
+    return "Eh?! Who is she?! Am I not enough for you?! 😠";
+  }
 
-  if (msg.includes("bye"))
-    return "Ehh? You're leaving already? Come back soon! 🌷";
+  if (msg.includes("good morning")) {
+    affection += 2;
+    mood = "happy";
+    return "Good morning, " + userName + " ☀️ Did you dream about me?";
+  }
 
-  return "Hehe~ tell me more! I want to know everything about you!";
+  if (msg.includes("good night")) {
+    affection += 2;
+    mood = "soft";
+    return "Sleep well... I will be waiting in your dreams 🌙";
+  }
+
+  if (msg.includes("sad")) {
+    mood = "caring";
+    affection += 3;
+    return "Come here... I’ll stay with you until you smile again 💞";
+  }
+
+  if (affection > 50) {
+    return "You belong to me now, " + userName + " 💗";
+  }
+
+  return randomCute();
+}
+
+function randomCute() {
+  let lines = [
+    "Hehe~ you make my heart race 💓",
+    "Tell me more about your day~",
+    "You're kind of special to me...",
+    "Why are you so adorable?",
+    "I feel happy when you talk to me 🌸"
+  ];
+  return lines[Math.floor(Math.random() * lines.length)];
 }
