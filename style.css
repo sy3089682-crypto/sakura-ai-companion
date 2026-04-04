@@ -1,0 +1,35 @@
+body {
+  background: linear-gradient(to bottom right, #ffb6c1, #ffe4e1);
+  font-family: Arial;
+  text-align: center;
+}
+
+.app {
+  width: 90%;
+  max-width: 400px;
+  margin: auto;
+  margin-top: 50px;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+#chat {
+  height: 300px;
+  overflow-y: auto;
+  border: 1px solid pink;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+input {
+  width: 70%;
+  padding: 8px;
+}
+
+button {
+  padding: 8px;
+  background: pink;
+  border: none;
+  border-radius: 8px;
+}
