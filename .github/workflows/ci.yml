@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Validate HTML
+      run: |
+        # Check if index.html exists
+        if [ ! -f "index.html" ]; then
+          echo "Error: index.html not found"
+          exit 1
+        fi
+        
+        # Basic HTML validation
+        grep -q "<!DOCTYPE html>" index.html && echo "✓ HTML structure valid" || exit 1
+        grep -q "<head>" index.html && echo "✓ Head tag found" || exit 1
+        grep -q "<body>" index.html && echo "✓ Body tag found" || exit 1
+    
+    - name: Check for required elements
+      run: |
+        grep -q 'id="input"' index.html && echo "✓ Input element found" || exit 1
+        grep -q 'id="chat"' index.html && echo "✓ Chat element found" || exit 1
+        grep -q 'id="avatar"' index.html && echo "✓ Avatar element found" || exit 1
+    
+    - name: Validate CSS
+      run: |
+        # Check for CSS syntax basics
+        grep -q "<style>" index.html && echo "✓ Style tag found" || exit 1
+        grep -q "}</style>" index.html && echo "✓ Style tag closed" || exit 1
+    
+    - name: Validate JavaScript
+      run: |
+        # Check for required JavaScript functions
+        grep -q "function sendMessage" index.html && echo "✓ sendMessage function found" || exit 1
+        grep -q "function toggleDark" index.html && echo "✓ toggleDark function found" || exit 1
+        grep -q "function resetChat" index.html && echo "✓ resetChat function found" || exit 1
+    
+    - name: Check file structure
+      run: |
+        [ -f "README.md" ] && echo "✓ README.md found" || exit 1
+        [ -f "LICENSE" ] && echo "✓ LICENSE found" || exit 1
+        [ -f ".gitignore" ] && echo "✓ .gitignore found" || exit 1
+        [ -f "CONTRIBUTING.md" ] && echo "✓ CONTRIBUTING.md found" || exit 1
+    
+    - name: Verify no hardcoded secrets
+      run: |
+        if grep -r "sk-\|api_key\|password\|secret" index.html | grep -v "PASTE_YOUR_API_KEY_HERE"; then
+          echo "Warning: Possible hardcoded credentials detected"
+          exit 1
+        fi
+        echo "✓ No hardcoded secrets found"
+    
+    - name: Lint check
+      run: |
+        # Basic JavaScript lint - check for common issues
+        if grep -q "console\.log" index.html; then
+          echo "⚠ Warning: console.log statements found (consider removing in production)"
+        fi
+        echo "✓ Lint check complete"
+
+  build:
+    needs: validate
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies (if needed)
+      run: |
+        if [ -f "package.json" ]; then
+          npm install
+        else
+          echo "No package.json found, skipping npm install"
+        fi
+    
+    - name: Build project (if applicable)
+      run: |
+        if [ -f "package.json" ] && grep -q '"build"' package.json; then
+          npm run build
+        else
+          echo "No build script configured"
+        fi
